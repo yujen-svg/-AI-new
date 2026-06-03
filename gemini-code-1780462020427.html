@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>歡迎光臨宇宙AI!</title>
+  
+  <style>
+    /* 🎨 網路字型定義：強制從 fonts/ 資料夾載入你提供的 Adobe 明體字型檔 */
+    @font-face {
+      font-family: 'AdobeMingStd';
+      src: url('fonts/Adobe 明體 Std L.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    /* 全域 Y2K 復古未來感字型與深灰單色底 */
+    body {
+      font-family: 'AdobeMingStd', "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background-color: #1a1a1a;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 0);
+      background-size: 4px 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      position: relative; 
+    }
+
+    /* 藍牙連線按鈕：獨立定位在整個網頁的最左上角，極度隱蔽，防觀眾誤點 */
+    .btn-bluetooth {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: auto !important; 
+      background: rgba(0, 0, 0, 0.5) !important; 
+      color: #555555 !important; 
+      border: 1px solid #333333 !important;
+      padding: 4px 8px !important;
+      font-size: 10px !important;
+      font-weight: bold !important;
+      letter-spacing: 1px !important;
+      cursor: pointer;
+      box-shadow: none !important; 
+      border-radius: 2px;
+      z-index: 9999; 
+    }
+    
+    .btn-bluetooth::before {
+      content: "" !important; 
+    }
+
+    /* 工作人員操作摸到或點擊時才會亮起螢光綠 */
+    .btn-bluetooth:hover, .btn-bluetooth:active {
+      background: #000000 !important;
+      color: #8bd344 !important;
+      border-color: #8bd344 !important;
+    }
+
+    /* 呼應海報的粗高對比拼貼風格卡片 */
+    .container {
+      background: linear-gradient(135deg, rgba(12, 22, 43, 0.95), rgba(5, 42, 82, 0.95));
+      background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 0);
+      background-size: 5px 5px;
+      border: 4px solid #000000;
+      box-shadow: 12px 12px 0px #000000, 0px 0px 35px rgba(0, 210, 255, 0.35);
+      padding: 45px 35px;
+      border-radius: 4px;
+      width: 90%;
+      max-width: 460px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    /* 標題：螢光綠外發光，複製海報字體質感 */
+    h1 {
+      font-size: 34px;
+      font-weight: 900;
+      color: #ffffff;
+      margin: 0 0 12px 0;
+      letter-spacing: 2px;
+      text-shadow: 3px 3px 0px #000, 0px 0px 12px #8bd344;
+    }
+
+    /* 副標題：宇宙科技藍文字，黑底反白標籤 */
+    h2 {
+      font-size: 15px;
+      color: #00d2ff; 
+      background-color: #000000; 
+      display: inline-block;
+      padding: 6px 15px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      line-height: 1.4;
+      margin-bottom: 30px;
+      box-shadow: 4px 4px 0px #8bd344;
+    }
+
+    /* 提問輸入框：黑底、螢光綠字的終端機風格 */
+    textarea {
+      width: 100%;
+      height: 130px;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.95); 
+      border: 3px solid #000000;
+      border-radius: 0px;
+      color: #8bd344; 
+      font-family: monospace, 'AdobeMingStd', "PingFang TC";
+      font-size: 16px;
+      font-weight: bold;
+      resize: none;
+      box-sizing: border-box;
+      margin-bottom: 25px;
+      box-shadow: inset 4px 4px 10px rgba(0,0,0,0.8);
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #00d2ff;
+      color: #00d2ff;
+      box-shadow: inset 4px 4px 10px rgba(0,0,0,0.8), 0px 0px 15px rgba(0, 210, 255, 0.5);
+    }
+
+    /* 全域大按鈕：老式機械播放鍵風格 */
+    button {
+      width: 100%;
+      background: #8bd344; 
+      color: #000000;
+      border: 3px solid #000000;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      cursor: pointer;
+      box-shadow: 6px 6px 0px #000000; 
+      transition: all 0.1s ease;
+    }
+
+    #submitBtn::before {
+      content: "▶ ";
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: #00d2ff; 
+      box-shadow: 4px 4px 0px #000000;
+      transform: translate(2px, 2px);
+    }
+
+    button:active {
+      box-shadow: 0px 0px 0px #000000;
+      transform: translate(6px, 6px);
+    }
+
+    /* 成功提示框 */
+    .result-box {
+      margin-top: 25px;
+      padding: 12px;
+      background: #000000;
+      border: 3px solid #8bd344;
+      box-shadow: 6px 6px 0px rgba(0, 210, 255, 0.3);
+      animation: glitchIn 0.2s linear;
+    }
+    
+    .result-box h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #8bd344;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes glitchIn {
+      0% { opacity: 0; transform: scaleY(0); }
+      50% { opacity: 0.5; transform: scaleY(1.2) skewX(5deg); }
+      100% { opacity: 1; transform: scaleY(1) skewX(0deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <button id="connectBleBtn" class="btn-bluetooth">⚙️ SYS_CONNECT</button>
+
+  <div class="container">
+    <h1>👋 歡迎光臨宇宙AI!</h1>
+    <h2>關於2045年的未來世界，你有什麼想知道的嗎？</h2>
+
+    <form id="questionForm" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSc0bNtRRcczXZrLHVULaiWmJnYXfdaMkdm8RhRLkCw4HAw-wg/formResponse" method="POST" target="hidden_iframe">
+      <textarea id="questionInput" name="entry.1887716438" placeholder="請輸入您的問題..."></textarea>
+      <button type="submit" id="submitBtn">送出問題</button>
+    </form>
+    
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+    <div id="resultBox" class="result-box hidden">
+      <h3 id="statusText">您的提問已收到！</h3>
+    </div>
+  </div>
+
+  <script>
+    // ====== 🚀 自動化核心參數設定 ======
+    const GEMINI_API_KEY = "AQ.Ab8RN6JKL1gQkg1s3SzSDakm3JvdTJP20ALDg3_4TvAE1UXSsA"; 
+    const INVOICE_BG_URL = "發票Demo.jpg"; 
+    
+    let printCharacteristic = null;
+
+    const questionForm = document.getElementById('questionForm');
+    const questionInput = document.getElementById('questionInput');
+    const resultBox = document.getElementById('resultBox');
+    const statusText = document.getElementById('statusText');
+    const connectBleBtn = document.getElementById('connectBleBtn');
+
+    // 市面上常見熱感應/標籤印表機的服務 UUID 清單（擴大搜尋範圍以相容不同晶片）
+    const PRINTER_SERVICES = [
+      '0000ff00-0000-1000-8000-00805f9b34fb', // 廠商自訂1 (原程式碼設定)
+      '0000fe58-0000-1000-8000-00805f9b34fb', // 廠商自訂2 (常見公版)
+      '000018f0-0000-1000-8000-00805f9b34fb', // 經典通用印表機服務
+      '49535343-fe7d-4158-72fa-4a50631d1a11'  // ISSC 藍牙序列晶片常用
+    ];
+
+    // 1. Web Bluetooth 藍牙連線機關 (🧬 多重相容性改良版)
+    connectBleBtn.addEventListener('click', async () => {
+      try {
+        statusText.innerText = "正在尋找藍牙裝置...";
+        
+        // 使用 acceptAllDevices 並把所有可能用到的 UUID 填入 optionalServices 中，解決安全限制
+        const device = await navigator.bluetooth.requestDevice({
+          acceptAllDevices: true,
+          optionalServices: PRINTER_SERVICES
+        });
+        
+        console.log("已選取裝置:", device.name);
+        const server = await device.gatt.connect();
+        
+        // 自動循環測試哪一個服務存在於這台印表機中
+        let service = null;
+        for (const uuid of PRINTER_SERVICES) {
+          try {
+            service = await server.getPrimaryService(uuid);
+            if (service) {
+              console.log("成功媒合藍牙服務 UUID:", uuid);
+              break;
+            }
+          } catch (e) {
+            console.log(`此裝置不支援服務: ${uuid}，嘗試下一組...`);
+          }
+        }
+
+        if (!service) {
+          throw new Error("找不到相符的印表機通訊服務。這台印表機可能使用其他特殊 UUID。");
+        }
+        
+        // 取得該服務的所有特徵值
+        const characteristics = await service.getCharacteristics();
+        if (characteristics.length === 0) {
+          throw new Error("在該服務中找不到任何可寫入的特徵值(Characteristic)。");
+        }
+        
+        // 尋找具有 write 屬性的特徵值，若沒有則預設抓第一個
+        printCharacteristic = characteristics.find(c => c.properties.write || c.properties.writeWithoutResponse) || characteristics[0];
+        
+        alert(`🟢 時光發票機連線成功！\n配對裝置: ${device.name || "未知名稱"}`);
+        connectBleBtn.style.display = 'none'; 
+      } catch (error) {
+        console.error("藍牙連線失敗:", error);
+        alert("❌ 藍牙連線失敗:\n" + error.message + "\n\n💡 排除檢查步驟：\n1. 請確認印表機已開機。\n2. 請確認印表機「沒有」被其他手機 App 或網頁佔用連線。\n3. 如果是 Android/Mac，請試著將系統藍牙關閉再重開。");
+      }
+    });
+
+    // 2. 表單送出異步攔截事件
+    questionForm.addEventListener('submit', async function(e) {
+      const userQuestion = questionInput.value.trim();
+      
+      if (userQuestion === "") {
+        alert("請先輸入您的時空疑問再送出喔！");
+        e.preventDefault(); 
+        return;
+      }
+
+      if (!printCharacteristic) {
+        alert("⚠️ 偵測到發票機尚未連線！請先點擊網頁最左上角 ⚙️ SYS_CONNECT 進行藍牙配對。");
+        e.preventDefault();
+        return;
+      }
+      
+      statusText.innerText = "⏳ 正在傳輸至 2045 年伺服器...";
+      resultBox.classList.remove('hidden');
+      e.preventDefault(); 
+
+      try {
+        // A. 異步呼叫 Gemini API 獲取解答
+        const aiAnswer = await fetchGemini開示(userQuestion);
+        
+        // B. 背景秘密提交表單給 Google Form
+        questionForm.submit();
+
+        statusText.innerText = "🖨️ 時光機正在列印未來憑證...";
+
+        // C. 本地 Canvas 圖片合成與藍牙列印
+        await processAndPrint(userQuestion, aiAnswer);
+
+        statusText.innerText = "✨ 傳輸成功！請在身旁領取未來發票。";
+      } catch (error) {
+        console.error(error);
+        statusText.innerText = "❌ 時空傳輸混亂，請重新嘗試。";
+      }
+      
+      setTimeout(() => {
+        questionInput.value = "";
+      }, 1000);
+      
+      setTimeout(() => {
+        resultBox.classList.add('hidden');
+      }, 5000);
+    });
+
+    // 3. 串接 Gemini API
+    async function fetchGemini開示(question) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+      
+      const systemInstruction = 
+        "你是一個裝在時光機「REWIND THE FUTURE」互動裝置裡的宇宙 AI。\n" +
+        "回覆限制：\n" +
+        "1. 使用者會輸入關於2045年的未來世界，請給予對應且充滿想像、幽默且切合主題的解答。\n" +
+        "2. 字數限制：繁體中文 30字至 60 字以內（包含標點符號）。\n" +
+        "3. 格式限制：不要包含任何前言或「好的，以下是我的回答」等廢話，直接輸出解答內容。因為你的回答將被直接印在熱感應紙上，請確保斷句清晰。";
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: question }] }],
+          systemInstruction: { parts: [{ text: systemInstruction }] },
+          generationConfig: { temperature: 0.8 }
+        })
+      });
+
+      const data = await response.json();
+      return data.candidates[0].content.parts[0].text.trim();
+    }
+
+    // 4. Canvas 文字自動折行演算法
+    function wrapText(ctx, text, maxWidth) {
+      const words = Array.from(text);
+      const lines = [];
+      let currentLine = "";
+
+      for (let i = 0; i < words.length; i++) {
+        let testLine = currentLine + words[i];
+        let metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && i > 0) {
+          lines.push(currentLine);
+          currentLine = words[i];
+        } else {
+          currentLine = testLine;
+        }
+      }
+      lines.push(currentLine);
+      return lines;
+    }
+
+    // 5. 影像渲染排版中樞
+    function processAndPrint(question, aiAnswer) {
+      return new Promise((resolve, reject) => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.src = INVOICE_BG_URL;
+
+        img.onload = async function() {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          
+          ctx.drawImage(img, 0, 0);
+          ctx.fillStyle = "#000000";
+          
+          const fontSize = "11px";
+          const fontFamily = "'AdobeMingStd', serif";
+          ctx.font = `${fontSize} ${fontFamily}`;
+
+          // D. 自動抓取提問填入正確位置
+          ctx.fillText(question.substring(0, 15), 180, 232); 
+          
+          // E. 自動抓取「現在時間」填入正確位置
+          const currentTime = new Date().toLocaleString('zh-TW', { hour12: false });
+          ctx.fillText(currentTime, 180, 272);
+
+          // F. 自動將 AI 解答斷行並填入正確位置
+          const lines = wrapText(ctx, aiAnswer, 400);
+          let startY = 365; 
+          for (let i = 0; i < lines.length; i++) {
+            ctx.fillText(lines[i], 80, startY + (i * 18));
+          }
+
+          try {
+            await sendCanvasToPrinter(canvas);
+            resolve();
+          } catch (err) {
+            reject(err);
+          }
+        };
+        img.onerror = () => reject("底圖加載出錯，請確認 發票Demo.jpg 是否在主目錄下。");
+      });
+    }
+
+    // 6. 二值化影像數據與藍牙分包指令發射
+    async function sendCanvasToPrinter(canvas) {
+      const ctx = canvas.getContext('2d');
+      const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const width = canvas.width;
+      const height = canvas.height;
+      
+      const widthBytes = Math.ceil(width / 8);
+      const header = new Uint8Array([0x1D, 0x76, 0x30, 0, widthBytes & 0xFF, (widthBytes >> 8) & 0xFF, height & 0xFF, (height >> 8) & 0xFF]);
+      
+      const bitmap = new Uint8Array(widthBytes * height);
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const idx = (y * width + x) * 4;
+          const r = imgData.data[idx];
+          const g = imgData.data[idx+1];
+          const b = imgData.data[idx+2];
+          const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+          
+          if (gray < 128) { 
+            const byteIdx = y * widthBytes + Math.floor(x / 8);
+            const bitIdx = 7 - (x % 8);
+            bitmap[byteIdx] |= (1 << bitIdx);
+          }
+        }
+      }
+
+      const combined = new Uint8Array(header.length + bitmap.length);
+      combined.set(header);
+      combined.set(bitmap, header.length);
+
+      const chunkSize = 20;
+      for (let i = 0; i < combined.length; i += chunkSize) {
+        const chunk = combined.slice(i, i + chunkSize);
+        await printCharacteristic.writeValue(chunk);
+        await new Promise(r => setTimeout(r, 5));
+      }
+
+      const feedCut = new Uint8Array([0x1B, 0x64, 3, 0x1D, 0x56, 1]);
+      await printCharacteristic.writeValue(feedCut);
+    }
+  </script>
+</body>
+</html>
